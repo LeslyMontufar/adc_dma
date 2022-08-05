@@ -12,12 +12,34 @@
 #include "app.h"
 #include "hw.h"
 
+#define CLKINT 			(72000000/htim1.Instance->PSC) //2000
+
 extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim3;
 extern ADC_HandleTypeDef hadc1;
 extern DMA_HandleTypeDef hdma_adc1;
 
+/* ---------- ADC ---------- */
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
+	hw_adc_stop();
+}
 
+void hw_adc_start(uint16_t *values, uint32_t size){
+	HAL_TIM_Base_Start(&htim3);
+	HAL_ADC_Start_DMA(&hadc1, (uint32_t *)values, size);
+}
+
+void hw_adc_stop(void){
+	HAL_TIM_Base_Stop(&htim3);
+	HAL_ADC_Stop_DMA(&hadc1);
+}
+
+void hw_adc_calibration(void){
+	HAL_ADCEx_Calibration_Start(&hadc1);
+	__HAL_DMA_DISABLE_IT(&hdma_adc1, DMA_IT_HT);
+}
+
+/* ---------- Timer Blink ---------- */
 void hw_timer_start(TIM_HandleTypeDef *htim) {
 	HAL_TIM_Base_Start_IT(htim);
 }
@@ -28,23 +50,26 @@ void hw_blink_timer_init(){
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	if(htim == &htim1) {
+		hw_toggle_led();
 		__HAL_TIM_SET_COUNTER(&htim1, 0);
 	}
-//	else if(htim == &htim3)	{
-////		HAL_ADC_Start_DMA(hadc, pData, Length);
-//		__HAL_TIM_SET_COUNTER(&htim2, 0);
-//	}
+	else if(htim == &htim3)	{
+		__HAL_TIM_SET_COUNTER(&htim2, 0);
+	}
 }
 
+void hw_toggle_led(void){
+	HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+}
+
+void hw_set_delay(uint16_t delay) {
+	uint16_t arr = (CLKINT*delay/1000)-1;
+	__HAL_TIM_SET_AUTORELOAD(&htim1, arr);
+	__HAL_TIM_SET_COUNTER(&htim1, 0);
+}
+
+/* ---------- Registro de funções ---------- */
 void hw_register_app_set_adc_finished(void (*callback)(void)){
 	app_set_adc_finished = callback;
-}
-
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
-	app_set_adc_finished();
-}
-
-void hw_cpu_sleep(){
-	__WFI();
 }
 
