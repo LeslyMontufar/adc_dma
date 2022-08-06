@@ -1,0 +1,5 @@
+../app/app.c:21:13:app_process_samples	16	static
+../app/app.c:29:6:app_get_adc_values	8	static
+../app/app.c:34:6:app_average_adc_value	40	static
+../app/app.c:51:6:app_init	8	static
+../app/app.c:59:6:app_loop	4	static

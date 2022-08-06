@@ -25,12 +25,10 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 }
 
 void hw_adc_start(uint16_t *values, uint32_t size){
-	HAL_TIM_Base_Start(&htim3);
 	HAL_ADC_Start_DMA(&hadc1, (uint32_t *)values, size);
 }
 
 void hw_adc_stop(void){
-	HAL_TIM_Base_Stop(&htim3);
 	HAL_ADC_Stop_DMA(&hadc1);
 }
 
@@ -44,7 +42,7 @@ void hw_timer_start(TIM_HandleTypeDef *htim) {
 	HAL_TIM_Base_Start_IT(htim);
 }
 
-void hw_blink_timer_init(){
+void hw_blink_timer_start(void){
 	hw_timer_start(&htim1);
 }
 
@@ -54,7 +52,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 		__HAL_TIM_SET_COUNTER(&htim1, 0);
 	}
 	else if(htim == &htim3)	{
-		__HAL_TIM_SET_COUNTER(&htim2, 0);
+		app_get_adc_values();
+		__HAL_TIM_SET_COUNTER(&htim3, 0);
 	}
 }
 
@@ -66,10 +65,5 @@ void hw_set_delay(uint16_t delay) {
 	uint16_t arr = (CLKINT*delay/1000)-1;
 	__HAL_TIM_SET_AUTORELOAD(&htim1, arr);
 	__HAL_TIM_SET_COUNTER(&htim1, 0);
-}
-
-/* ---------- Registro de funções ---------- */
-void hw_register_app_set_adc_finished(void (*callback)(void)){
-	app_set_adc_finished = callback;
 }
 

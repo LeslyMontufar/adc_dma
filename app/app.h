@@ -8,8 +8,8 @@
 #ifndef APP_H_
 #define APP_H_
 
-void app_adc_it(uint32_t tmp);
-void app_led_fade_percent(uint32_t percent);
+void app_get_adc_values(void);
+void app_average_adc_value(uint16_t *adc_raw_val, uint16_t *adc_avg_ch1, uint16_t *adc_avg_ch2);
 void app_init(void);
 void app_loop(void);
 
