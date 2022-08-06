@@ -1,8 +1,8 @@
 /*
- * hw.c
- * Abstrai as funções do HAL e CMSIS
+ *  hw.c
+ *  Abstrai as funções do HAL e CMSIS
  *
- *  Created on: July 21, 2022
+ *  Created on: August 06, 2022
  *      Author: lesly
  */
 
@@ -15,7 +15,7 @@
 #define CLKINT 			(72000000/htim1.Instance->PSC) //2000
 
 extern TIM_HandleTypeDef htim1;
-extern TIM_HandleTypeDef htim3;
+extern TIM_HandleTypeDef htim2;
 extern ADC_HandleTypeDef hadc1;
 extern DMA_HandleTypeDef hdma_adc1;
 
@@ -46,14 +46,19 @@ void hw_blink_timer_start(void){
 	hw_timer_start(&htim1);
 }
 
+void hw_adc_timer_start(void){
+	hw_timer_start(&htim2);
+}
+
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	if(htim == &htim1) {
 		hw_toggle_led();
 		__HAL_TIM_SET_COUNTER(&htim1, 0);
 	}
-	else if(htim == &htim3)	{
+	if(htim == &htim2){
+//		HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
 		app_get_adc_values();
-		__HAL_TIM_SET_COUNTER(&htim3, 0);
+		__HAL_TIM_SET_COUNTER(&htim2, 0);
 	}
 }
 
@@ -63,7 +68,11 @@ void hw_toggle_led(void){
 
 void hw_set_delay(uint16_t delay) {
 	uint16_t arr = (CLKINT*delay/1000)-1;
+
+	if(__HAL_TIM_GET_COUNTER(&htim1) >= arr)
+		__HAL_TIM_SET_COUNTER(&htim1, 0);
+
 	__HAL_TIM_SET_AUTORELOAD(&htim1, arr);
-	__HAL_TIM_SET_COUNTER(&htim1, 0);
+
 }
 
