@@ -150,3 +150,25 @@ void hw_adc_stop(void){
 6. Circuito funcionando.
 
 ![adc-dois-pot](https://github.com/LeslyMontufar/adc_dma/blob/main/img/funcionando.jpg)
+
+7. Para usar debugar usando o Sleep Mode, é necessário utilizar a seguinte configuração no `main.c`.
+```
+  /* USER CODE BEGIN 2 */
+  HAL_DBGMCU_EnableDBGSleepMode();
+  app_init();
+  /* USER CODE END 2 */
+```
+
+Assim é possível usar sem problemas o sleep mode no `app_loop`.
+```
+void hw_cpu_sleep(void){
+	__WFI();
+}
+```
+```
+void app_loop(void){
+	hw_cpu_sleep();
+}
+```
+
+
