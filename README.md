@@ -149,4 +149,4 @@ void hw_adc_stop(void){
 ```
 6. Circuito funcionando.
 
-![adc-dois-pot](https://github.com/LeslyMontufar/adc_dma/blob/main/img/funcionando.png)
+![adc-dois-pot](https://github.com/LeslyMontufar/adc_dma/blob/main/img/funcionando.jpg)
