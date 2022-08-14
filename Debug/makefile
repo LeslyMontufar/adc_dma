@@ -35,34 +35,34 @@ $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
 
 
-BUILD_ARTIFACT_NAME := pwm_dma
+BUILD_ARTIFACT_NAME := adc_dma
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX :=
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ARTIFACT_EXTENSION),.$(BUILD_ARTIFACT_EXTENSION),)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-pwm_dma.elf \
+adc_dma.elf \
 
 MAP_FILES += \
-pwm_dma.map \
+adc_dma.map \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-pwm_dma.list \
+adc_dma.list \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: pwm_dma.elf secondary-outputs
+main-build: adc_dma.elf secondary-outputs
 
 # Tool invocations
-pwm_dma.elf pwm_dma.map: $(OBJS) $(USER_OBJS) C:\Users\lesly\STM32CubeIDE\workspace_1.9.0\pwm_dma\STM32F103C8TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "pwm_dma.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"C:\Users\lesly\STM32CubeIDE\workspace_1.9.0\pwm_dma\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="pwm_dma.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+adc_dma.elf adc_dma.map: $(OBJS) $(USER_OBJS) C:\Users\lesly\STM32CubeIDE\workspace_1.9.0\adc_dma\STM32F103C8TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "adc_dma.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"C:\Users\lesly\STM32CubeIDE\workspace_1.9.0\adc_dma\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="adc_dma.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -71,14 +71,14 @@ default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-pwm_dma.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "pwm_dma.list"
+adc_dma.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "adc_dma.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) default.size.stdout pwm_dma.elf pwm_dma.list pwm_dma.map
+	-$(RM) adc_dma.elf adc_dma.list adc_dma.map default.size.stdout
 	-@echo ' '
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)

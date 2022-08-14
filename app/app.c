@@ -16,7 +16,7 @@
 
 bool app_started = false;
 uint16_t adc_data[ADC_SAMPLES] = {0};
-volatile uint16_t delay = 1000;
+volatile uint16_t delay = 800;
 
 static void app_process_samples(void){
 	uint16_t adc_avg_ch1, adc_avg_ch2;
